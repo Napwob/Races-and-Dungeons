@@ -15,21 +15,18 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
-    private WeaponController equiped;
+    private EquipedController equiped;
 
-    private void Start()
+    private void Awake()
     {
         Vector2 position = transform.position;
         position.y = 0;
         position.x = 0;
         transform.position = position;
-    }
 
-    private void Awake()
-    {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        equiped = GetComponentInChildren<WeaponController>();
+        equiped = GetComponentInChildren<EquipedController>();
     }
 
     private void Update()

@@ -21,6 +21,7 @@ public class PlayerFollow : MonoBehaviour
 
     void Update()
     {
+
         float distance = Vector2.Distance(player.transform.position, transform.position);
         if (distance > 1 && distance < 5)
         {

@@ -2,15 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponController : MonoBehaviour
+public class EquipedController : MonoBehaviour
 {
     public Vector2 PointerPosition { get; set; }
 
-    private MeleeWeaponController weapon;
+    private WeaponController weaponScript;
+    public GameObject[] prefab;
+
+    private GameObject selectedWeapon;
+    private int selectedWeaponIndex;
+
+    private Vector2 equipedScale;
+    /*public int selectedWeaponIdx 
+    {  
+        get {  return selectedWeaponIndex; } 
+        set 
+        {
+            if (selectedWeaponIdx < prefab.Length)
+                selectedWeaponIndex = selectedWeaponIdx;
+            else
+                Debug.Log("Error selectedWeaponIdx >= prefab.Length: " + selectedWeaponIdx);
+        } 
+    }*/
+
+    void loadWeaponFromPrefab()
+    {
+        if (selectedWeapon != null)
+        {
+            DestroySelectedWeapon();
+        }
+
+        GameObject selectedPrefab = prefab[selectedWeaponIndex];
+
+        Vector3 position = selectedPrefab.transform.position;
+        Quaternion rotation = selectedPrefab.transform.rotation;
+        Vector3 scale = selectedPrefab.transform.localScale;
+        scale.y *= equipedScale.y;
+
+        selectedWeapon = Instantiate(selectedPrefab, position, rotation);
+        selectedWeapon.transform.localScale = scale;
+        selectedWeapon.transform.parent = transform;
+
+        weaponScript = selectedWeapon.GetComponentInChildren<WeaponController>();
+    }
+
+    void DestroySelectedWeapon()
+    {
+        if (selectedWeapon != null)
+        {
+            Destroy(selectedWeapon);
+            selectedWeapon = null; 
+        }
+        weaponScript = null;
+    }
 
     private void Awake()
     {
-        weapon = GetComponentInChildren<MeleeWeaponController>();
+        loadWeaponFromPrefab();
     }
 
     void Update()
@@ -18,19 +66,28 @@ public class WeaponController : MonoBehaviour
         Vector2 direction = (PointerPosition - (Vector2)transform.position).normalized;
         transform.right = direction;
 
-        Vector2 scale = transform.localScale;
+        equipedScale = transform.localScale;
         if (direction.x < 0 ) 
         {
-            scale.y = -1;
+            equipedScale.y = -1;
         }
         else
         if (direction.x > 0 ) 
         {
-            scale.y = 1;
+            equipedScale.y = 1;
         }
-        transform.localScale = scale;
+        transform.localScale = equipedScale;
 
         if (Input.GetMouseButtonDown(0))
-            weapon.Attack();
+            weaponScript.Attack(direction);
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            selectedWeaponIndex++;
+            if (selectedWeaponIndex >= prefab.Length)
+                selectedWeaponIndex = 0;
+
+            loadWeaponFromPrefab();
+        }
     }
 }
