@@ -11,7 +11,6 @@ public class PlayerFollow : MonoBehaviour
 
     private Animator animator;
 
-
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -21,7 +20,6 @@ public class PlayerFollow : MonoBehaviour
 
     void Update()
     {
-
         float distance = Vector2.Distance(player.transform.position, transform.position);
         if (distance > 1 && distance < 5)
         {

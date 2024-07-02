@@ -6,7 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Wall
-  - Bullet
+  - Damage
+  - Poison
+  - Fire
   layers:
   - Default
   - TransparentFX
