@@ -9,6 +9,8 @@ public class PlayerFollow : MonoBehaviour
     private GameObject player;
     private Rigidbody2D rb;
 
+    public bool stunned;
+
     private Animator animator;
 
     private void Start()
@@ -21,7 +23,7 @@ public class PlayerFollow : MonoBehaviour
     void Update()
     {
         float distance = Vector2.Distance(player.transform.position, transform.position);
-        if (distance > 1 && distance < 5)
+        if (distance < 5 && !stunned)
         {
             Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
             rb.velocity = direction * speed;

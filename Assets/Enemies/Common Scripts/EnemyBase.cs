@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealthStatus : MonoBehaviour
+public class EnemyBase : MonoBehaviour
 {
     [SerializeField] private int health;
 
@@ -11,6 +11,7 @@ public class EnemyHealthStatus : MonoBehaviour
     private CircleCollider2D circleCollider;
     private Rigidbody2D rb;
     private SpriteRenderer rbSprite;
+    private WeaponController WeaponController;
 
     private status enemyStatus;
     enum status
@@ -32,19 +33,77 @@ public class EnemyHealthStatus : MonoBehaviour
         enemyStatus = status.None;  
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Damage"))
         {
+            Debug.Log("Triggered");
+            BulletCotroller bulletScript = collision.gameObject.GetComponent<BulletCotroller>();
+            if (bulletScript)
+            {
+                health -= bulletScript.Damage;
+                enemyStatus = status.onDamage;
+            }
+            else
+            {
+                WeaponController WeaponController = collision.gameObject.GetComponent<WeaponController>();
+                if (WeaponController)
+                {
+                    health -= WeaponController.Damage;
+                    enemyStatus = status.onDamage;
+                }
+            }
+
+            Debug.Log("healthe: " + health);
+            return;
+        }
+
+        if (collision.gameObject.CompareTag("Fire"))
+        {
+            Debug.Log("Triggered");
             BulletCotroller bulletScript = collision.gameObject.GetComponent<BulletCotroller>();
             if (bulletScript != null)
             {
-                health -= bulletScript.damage;
-                enemyStatus = status.onDamage;
+                health -= bulletScript.Damage;
+                enemyStatus = status.onFire;
+            }
+            else
+            {
+                WeaponController WeaponController = collision.gameObject.GetComponent<WeaponController>();
+                if (WeaponController)
+                {
+                    health -= WeaponController.Damage;
+                    enemyStatus = status.onDamage;
+                }
             }
 
-            Debug.Log("bulletScript damage: " + bulletScript.damage);
+            Debug.Log("bulletScript damage: " + bulletScript.Damage);
             Debug.Log("healthe: " + health);
+            return;
+        }
+
+        if (collision.gameObject.CompareTag("Poison"))
+        {
+            Debug.Log("Triggered");
+            BulletCotroller bulletScript = collision.gameObject.GetComponent<BulletCotroller>();
+            if (bulletScript != null)
+            {
+                health -= bulletScript.Damage;
+                enemyStatus = status.onPoison;
+            }
+            else
+            {
+                WeaponController WeaponController = collision.gameObject.GetComponent<WeaponController>();
+                if (WeaponController)
+                {
+                    health -= WeaponController.Damage;
+                    enemyStatus = status.onDamage;
+                }
+            }
+
+            Debug.Log("bulletScript damage: " + bulletScript.Damage);
+            Debug.Log("healthe: " + health);
+            return;
         }
     }
 
@@ -88,6 +147,7 @@ public class EnemyHealthStatus : MonoBehaviour
             {
                 case status.onFire:
                     rbSprite.color = Color.yellow;
+                    StartCoroutine(DelayDamage(0.5f));
                     break;
                 case status.onDamage:
                     rbSprite.color = Color.red;
@@ -95,6 +155,7 @@ public class EnemyHealthStatus : MonoBehaviour
                     break;
                 case status.onPoison:
                     rbSprite.color = Color.green;
+                    StartCoroutine(DelayDamage(1f));
                     break;
                 default:
                     Debug.LogError("No such status");
@@ -108,7 +169,9 @@ public class EnemyHealthStatus : MonoBehaviour
 
     private IEnumerator DelayDamage(float delay)
     {
+        PlayerFollow.stunned = true;
         yield return new WaitForSeconds(delay);
+        PlayerFollow.stunned = false;
         rbSprite.color = Color.white;
         enemyStatus = status.None;
     }

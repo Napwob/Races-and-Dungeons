@@ -4,22 +4,39 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    private Animator animator;
-    public float delay = 0.15f;
-    private bool attackBlocked;
+    [SerializeField] private float delay = 0.15f;
 
-    public bool distanceWeapon;
-    public GameObject bulletPrefab;
-    public float bulletSpeed = 10;
+    [SerializeField] private bool distanceWeapon;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float bulletSpeed = 10;
 
     [SerializeField] private Vector3 startPosition;
 
-    [SerializeField] private int Damage;
+    public int Damage;
+
+    private Animator animator;
+    private bool attackBlocked;
+    private CapsuleCollider2D blade;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
+        blade = GetComponent<CapsuleCollider2D>();
+        if (blade != null )
+        {
+            blade.enabled = false;
+        }
+
         Debug.Log("Me loaded");
+    }
+
+    void shootBullet(Vector2 direction)
+    {
+        GameObject bullet = Instantiate(bulletPrefab, transform.position + startPosition, Quaternion.identity);
+        BulletCotroller bulletScript = bullet.GetComponent<BulletCotroller>();
+        bulletScript.Damage = Damage;
+        bullet.GetComponent<Rigidbody2D>().velocity = direction.normalized * bulletSpeed;
     }
 
     public void Attack(Vector2 direction)
@@ -30,14 +47,10 @@ public class WeaponController : MonoBehaviour
         animator.SetTrigger("Attack");
 
         if (distanceWeapon)
-        {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position + startPosition, Quaternion.identity);
-            BulletCotroller bulletScript = bullet.GetComponent<BulletCotroller>();
-            bulletScript.damage = Damage;
-            bullet.GetComponent<Rigidbody2D>().velocity = direction.normalized * bulletSpeed;
-        }
+            shootBullet(direction);
+        else
+            blade.enabled = true;
 
-        attackBlocked = true;
         StartCoroutine(DelayAttack());
     }
 
@@ -45,5 +58,6 @@ public class WeaponController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         attackBlocked = false;
+        blade.enabled = false;
     }
 }

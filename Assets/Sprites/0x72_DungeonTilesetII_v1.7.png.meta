@@ -5637,9 +5637,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 305
-        y: 120
+        y: 130
         width: 13
-        height: 22
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -6015,7 +6015,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 289
-        y: 120
+        y: 117
         width: 6
         height: 7
       alignment: 0
@@ -6036,7 +6036,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 298
-        y: 120
+        y: 117
         width: 4
         height: 7
       alignment: 0
@@ -6056,10 +6056,10 @@ TextureImporter:
       name: 0x72_DungeonTilesetII_v1.7_283
       rect:
         serializedVersion: 2
-        x: 314
-        y: 120
-        width: 4
-        height: 7
+        x: 304
+        y: 64
+        width: 48
+        height: 60
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -6077,10 +6077,10 @@ TextureImporter:
       name: 0x72_DungeonTilesetII_v1.7_284
       rect:
         serializedVersion: 2
-        x: 212
-        y: 48
-        width: 22
-        height: 34
+        x: 314
+        y: 117
+        width: 4
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -6098,10 +6098,10 @@ TextureImporter:
       name: 0x72_DungeonTilesetII_v1.7_285
       rect:
         serializedVersion: 2
-        x: 289
-        y: 81
-        width: 14
-        height: 20
+        x: 212
+        y: 48
+        width: 22
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -6119,10 +6119,10 @@ TextureImporter:
       name: 0x72_DungeonTilesetII_v1.7_286
       rect:
         serializedVersion: 2
-        x: 304
-        y: 64
-        width: 48
-        height: 48
+        x: 289
+        y: 81
+        width: 14
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
