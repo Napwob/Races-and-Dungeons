@@ -6,11 +6,11 @@ public class EquipedController : MonoBehaviour
 {
     public Vector2 PointerPosition { get; set; }
 
-    private Weapon weapon;
-    public GameObject[] prefab;
+    private Weapon currentWeapon;
+    public GameObject[] prefabWeapons;
 
     private GameObject selectedWeapon;
-    private int selectedWeaponIndex;
+    private int currentWeaponIndex;
 
     private Vector2 equipedScale;
     /*public int selectedWeaponIdx 
@@ -25,14 +25,14 @@ public class EquipedController : MonoBehaviour
         } 
     }*/
 
-    void loadWeaponFromPrefab()
+    void LoadWeaponFromPrefab()
     {
         if (selectedWeapon != null)
         {
             DestroySelectedWeapon();
         }
 
-        GameObject selectedPrefab = prefab[selectedWeaponIndex];
+        GameObject selectedPrefab = prefabWeapons[currentWeaponIndex];
 
         Vector3 position = selectedPrefab.transform.position;
         Quaternion rotation = selectedPrefab.transform.rotation;
@@ -43,7 +43,7 @@ public class EquipedController : MonoBehaviour
         selectedWeapon.transform.localScale = scale;
         selectedWeapon.transform.parent = transform;
 
-        weapon = selectedWeapon.GetComponentInChildren<Weapon>();
+        currentWeapon = selectedWeapon.GetComponentInChildren<Weapon>();
     }
 
     void DestroySelectedWeapon()
@@ -51,45 +51,50 @@ public class EquipedController : MonoBehaviour
         if (selectedWeapon != null)
         {
             Destroy(selectedWeapon);
-            selectedWeapon = null; 
+            selectedWeapon = null;
         }
-        weapon = null;
+        currentWeapon = null;
     }
 
     private void Awake()
     {
-        loadWeaponFromPrefab();
+        LoadWeaponFromPrefab();
     }
 
     void Update()
     {
         Vector2 direction = (PointerPosition - (Vector2)transform.position).normalized;
-        weapon.direction = direction;
+        currentWeapon.direction = direction;
 
         transform.right = direction;
 
         equipedScale = transform.localScale;
-        if (direction.x < 0 ) 
+        if (direction.x < 0)
         {
             equipedScale.y = -1;
         }
         else
-        if (direction.x > 0 ) 
+        if (direction.x > 0)
         {
             equipedScale.y = 1;
         }
         transform.localScale = equipedScale;
 
-        if (Input.GetMouseButtonDown(0))
-            weapon.Attack();
+        HandleInput();
+    }
+    private void HandleInput()
+    {
+        // Атака при нажатии левой кнопки мыши
+        if (Input.GetMouseButtonDown(0) && currentWeapon != null)
+        {
+            currentWeapon.Attack();
+        }
 
+        // Смена оружия при нажатии правой кнопки мыши
         if (Input.GetMouseButtonDown(1))
         {
-            selectedWeaponIndex++;
-            if (selectedWeaponIndex >= prefab.Length)
-                selectedWeaponIndex = 0;
-
-            loadWeaponFromPrefab();
+            currentWeaponIndex = (currentWeaponIndex + 1) % prefabWeapons.Length;
+            LoadWeaponFromPrefab();
         }
     }
 }
