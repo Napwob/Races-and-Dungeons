@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletCotroller : MonoBehaviour
+public class BulletController : MonoBehaviour
 {
-    public int Damage { set; get; }
-
     void Awake()
     {
         Destroy(gameObject, 4);

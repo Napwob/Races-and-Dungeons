@@ -11,7 +11,7 @@ public class EnemyBase : MonoBehaviour
     private CircleCollider2D circleCollider;
     private Rigidbody2D rb;
     private SpriteRenderer rbSprite;
-    private WeaponController WeaponController;
+    private Weapon weapon;
 
     private status enemyStatus;
     enum status
@@ -38,21 +38,10 @@ public class EnemyBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Damage"))
         {
             Debug.Log("Triggered");
-            BulletCotroller bulletScript = collision.gameObject.GetComponent<BulletCotroller>();
-            if (bulletScript)
-            {
-                health -= bulletScript.Damage;
-                enemyStatus = status.onDamage;
-            }
-            else
-            {
-                WeaponController WeaponController = collision.gameObject.GetComponent<WeaponController>();
-                if (WeaponController)
-                {
-                    health -= WeaponController.Damage;
-                    enemyStatus = status.onDamage;
-                }
-            }
+            DamageController bulletScript = collision.gameObject.GetComponent<DamageController>();
+
+            health -= bulletScript.Damage;
+            enemyStatus = status.onDamage;
 
             Debug.Log("healthe: " + health);
             return;
@@ -61,48 +50,12 @@ public class EnemyBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Fire"))
         {
             Debug.Log("Triggered");
-            BulletCotroller bulletScript = collision.gameObject.GetComponent<BulletCotroller>();
-            if (bulletScript != null)
-            {
-                health -= bulletScript.Damage;
-                enemyStatus = status.onFire;
-            }
-            else
-            {
-                WeaponController WeaponController = collision.gameObject.GetComponent<WeaponController>();
-                if (WeaponController)
-                {
-                    health -= WeaponController.Damage;
-                    enemyStatus = status.onDamage;
-                }
-            }
-
-            Debug.Log("bulletScript damage: " + bulletScript.Damage);
-            Debug.Log("healthe: " + health);
             return;
         }
 
         if (collision.gameObject.CompareTag("Poison"))
         {
             Debug.Log("Triggered");
-            BulletCotroller bulletScript = collision.gameObject.GetComponent<BulletCotroller>();
-            if (bulletScript != null)
-            {
-                health -= bulletScript.Damage;
-                enemyStatus = status.onPoison;
-            }
-            else
-            {
-                WeaponController WeaponController = collision.gameObject.GetComponent<WeaponController>();
-                if (WeaponController)
-                {
-                    health -= WeaponController.Damage;
-                    enemyStatus = status.onDamage;
-                }
-            }
-
-            Debug.Log("bulletScript damage: " + bulletScript.Damage);
-            Debug.Log("healthe: " + health);
             return;
         }
     }
@@ -163,7 +116,7 @@ public class EnemyBase : MonoBehaviour
             }
         }
 
-        if (health == 0) 
+        if (health < 1) 
             Death();
     }
 

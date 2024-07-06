@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     public HealthBarController healthBar;
 
-    private void Awake()
+    private void Start()
     {
         Vector2 position = transform.position;
         position.y = 0;
@@ -58,32 +58,27 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        input.x = Input.GetAxisRaw("Horizontal") * moveSpeed;
-        input.y = Input.GetAxisRaw("Vertical") * moveSpeed;
-        Vector2 pointerInput = GetPointerInput();
+        HandleMovement();
+        HandleRotation();
 
-        equiped.PointerPosition = pointerInput;
-
-        var rotation = transform.rotation;
-        if (pointerInput.x - transform.position.x < 0)
-        {
-            rotation.y = -180;
-        }
-        else
-        if (pointerInput.x - transform.position.x > 0)
-        {
-            rotation.y = 0;
-        }
-        transform.root.rotation = rotation;
-
-        rb.velocity = input;
-
-        if (input != Vector2.zero)
-            animator.SetBool("isMoving", true);
-        else
-            animator.SetBool("isMoving", false);
         if (playerHealth == 0)
             Death();
+    }
+
+    private void HandleMovement()
+    {
+        input.x = Input.GetAxisRaw("Horizontal") * moveSpeed;
+        input.y = Input.GetAxisRaw("Vertical") * moveSpeed;
+        rb.velocity = input;
+        animator.SetBool("isMoving", input != Vector2.zero);
+    }
+
+    private void HandleRotation()
+    {
+        Vector2 pointerInput = GetPointerInput();
+        equiped.PointerPosition = pointerInput;
+
+        transform.rotation = Quaternion.Euler(0f, pointerInput.x < transform.position.x ? 180f : 0f, 0f);
     }
 
     private IEnumerator FadeOut(float fadeTime)
@@ -109,8 +104,7 @@ public class PlayerController : MonoBehaviour
     void Death()
     {
         animator.SetTrigger("isDead");
-        rb.constraints = RigidbodyConstraints2D.FreezePositionX;
-        rb.constraints = RigidbodyConstraints2D.FreezePositionY;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rbSprite.sortingOrder = 1;
 
         StartCoroutine(FadeOut(1f));

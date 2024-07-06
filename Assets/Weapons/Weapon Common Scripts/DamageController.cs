@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class WeaponSettings : MonoBehaviour
+public class DamageController : MonoBehaviour
 {
-    [SerializeField] private int Damage;
+    public int Damage { set; get; }
 
     void Start()
     {

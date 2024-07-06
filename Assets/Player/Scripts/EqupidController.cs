@@ -6,7 +6,7 @@ public class EquipedController : MonoBehaviour
 {
     public Vector2 PointerPosition { get; set; }
 
-    private WeaponController weaponScript;
+    private Weapon weapon;
     public GameObject[] prefab;
 
     private GameObject selectedWeapon;
@@ -43,7 +43,7 @@ public class EquipedController : MonoBehaviour
         selectedWeapon.transform.localScale = scale;
         selectedWeapon.transform.parent = transform;
 
-        weaponScript = selectedWeapon.GetComponentInChildren<WeaponController>();
+        weapon = selectedWeapon.GetComponentInChildren<Weapon>();
     }
 
     void DestroySelectedWeapon()
@@ -53,7 +53,7 @@ public class EquipedController : MonoBehaviour
             Destroy(selectedWeapon);
             selectedWeapon = null; 
         }
-        weaponScript = null;
+        weapon = null;
     }
 
     private void Awake()
@@ -64,6 +64,8 @@ public class EquipedController : MonoBehaviour
     void Update()
     {
         Vector2 direction = (PointerPosition - (Vector2)transform.position).normalized;
+        weapon.direction = direction;
+
         transform.right = direction;
 
         equipedScale = transform.localScale;
@@ -79,7 +81,7 @@ public class EquipedController : MonoBehaviour
         transform.localScale = equipedScale;
 
         if (Input.GetMouseButtonDown(0))
-            weaponScript.Attack(direction);
+            weapon.Attack();
 
         if (Input.GetMouseButtonDown(1))
         {
