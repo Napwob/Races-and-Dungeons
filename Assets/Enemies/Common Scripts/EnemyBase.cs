@@ -19,7 +19,8 @@ public class EnemyBase : MonoBehaviour
         None,
         onFire,
         onDamage,
-        onPoison
+        onPoison,
+        onIce
     };
 
     private void Awake()
@@ -38,12 +39,11 @@ public class EnemyBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Damage"))
         {
             Debug.Log("Triggered");
-            DamageController bulletScript = collision.gameObject.GetComponent<DamageController>();
+            int Damage = collision.gameObject.GetComponent<DamageController>().Damage;
 
-            health -= bulletScript.Damage;
+            health -= Damage;
             enemyStatus = status.onDamage;
 
-            Debug.Log("healthe: " + health);
             return;
         }
 
@@ -55,6 +55,17 @@ public class EnemyBase : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Poison"))
         {
+            Debug.Log("Triggered");
+            return;
+        }
+
+        if (collision.gameObject.CompareTag("Ice"))
+        {
+            int Damage = collision.gameObject.GetComponent<DamageController>().Damage;
+
+            health -= Damage;
+            enemyStatus = status.onIce;
+
             Debug.Log("Triggered");
             return;
         }
@@ -109,6 +120,10 @@ public class EnemyBase : MonoBehaviour
                 case status.onPoison:
                     rbSprite.color = Color.green;
                     StartCoroutine(DelayDamage(1f));
+                    break;
+                case status.onIce:
+                    rbSprite.color = Color.blue;
+                    StartCoroutine(DelayDamage(2f));
                     break;
                 default:
                     Debug.LogError("No such status");

@@ -6,8 +6,6 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    private int playerHealth;
-
     public float moveSpeed;
     private float speedX, speedY;
 
@@ -20,7 +18,9 @@ public class PlayerController : MonoBehaviour
     private EquipedController equiped;
     private SpriteRenderer rbSprite;
 
-    public HealthBarController healthBar;
+    private HealthBarController healthBar;
+
+    private HealthController healthController;
 
     private void Start()
     {
@@ -29,14 +29,13 @@ public class PlayerController : MonoBehaviour
         position.x = 0;
         transform.position = position;
 
-        playerHealth = 20;
-
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         equiped = GetComponentInChildren<EquipedController>();
         rbSprite = GetComponent<SpriteRenderer>();
 
         healthBar = FindObjectOfType<HealthBarController>();
+        healthController = FindObjectOfType<HealthController>();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -44,8 +43,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             rbSprite.color = Color.red;
-            playerHealth--;
-            healthBar.updateHealthBar(playerHealth);
+            healthController.getFromCurrentHealth(1);
+            healthBar.updateHealthBar(healthController.getCurrentHealth());
             StartCoroutine(DelayDamage(0.15f));
         }
     }
@@ -61,7 +60,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleRotation();
 
-        if (playerHealth == 0)
+        if (healthController.getCurrentHealth() == 0)
             Death();
     }
 

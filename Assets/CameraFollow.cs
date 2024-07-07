@@ -8,8 +8,13 @@ public class CameraFollow : MonoBehaviour
     private float smoothTime = 0.25f;
     private Vector3 velocity = Vector3.zero;
 
-    [SerializeField] private Transform target;
+    private Transform target;
     [SerializeField] private GameObject hudObject;
+
+    private void Start()
+    {
+        target = GameObject.FindWithTag("Player").transform;
+    }
 
     void Update()
     {

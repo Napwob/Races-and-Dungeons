@@ -22,6 +22,7 @@ public class WeaponControllerRangeBase : Weapon
     void shootBullet()
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position + startPosition, Quaternion.identity);
+        bullet.transform.localScale = bulletPrefab.transform.localScale;
         DamageController bulletScript = bullet.GetComponent<DamageController>();
         bulletScript.Damage = damage;
         bullet.GetComponent<Rigidbody2D>().velocity = direction.normalized * bulletSpeed;
@@ -34,6 +35,7 @@ public class WeaponControllerRangeBase : Weapon
 
         animator.SetTrigger("Attack");
         shootBullet();
+        attackBlocked = true;
 
         StartCoroutine(DelayAttack());
     }
